@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cálculos de la Tesis</title>
+  <link rel="stylesheet" href="css/prism-vsc-dark-plus.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
+  </script>
+</head>
+<body>
+  <h1>Cálculos de la Tesis</h1>
+  <br>
+  <p><b>Tabla A.2.1: Datos de Entrada. </b></p>
+  <table>
+    <thead>
+            <tr>
+                <th>Propiedad mecánica de elasticidad</th>
+                <th>Símbolo</th>
+                <th>Valor</th>
+                <th>Unidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Modulo de Young longitudinal FC</td>
+                <td>E<sub>fA</sub></td>
+                <td><input type="number" step="0.001" min="0" id="E_f_a" value="239.4"></td>
+                <td>GPa</td>
+            </tr>
+            <tr>
+                <td>Modulo de Young transversal FC</td>
+                <td>E<sub>fT</sub></td>
+                <td><input type="number" step="0.001" min="0" id="E_f_t" value="13"></td>
+                <td>GPa</td>
+            </tr>
+            <tr>
+                <td>Relación de Poisson longitudinal FC</td>
+                <td>ν<sub>fA</sub></td>
+                <td><input type="number" step="0.001" max="1" min="0" id="NU_f_a" value="0.47"></td>
+                <td>---</td>
+            </tr>
+            <tr>
+                <td>Relación de Poisson transversal FC</td>
+                <td>ν<sub>fT</sub></td>
+                <td><input type="number" step="0.001" max="1" min="0" id="NU_f_t" value="0.17"></td>
+                <td>---</td>
+            </tr>
+            <tr>
+                <td>Modulo de Corte longitudinal FC</td>
+                <td>G<sub>fA</sub></td>
+                <td><input type="number" step="0.001" min="0" id="G_f_a" value="45.4"></td>
+                <td>GPa</td>
+            </tr>
+            <tr>
+                <td>Modulo de Corte transversal FC</td>
+                <td>G<sub>fT</sub></td>
+                <td><input type="number" step="0.001" min="0" id="G_f_t" value="5.6"></td>
+                <td>GPa</td>
+            </tr>
+            <tr>
+                <td>Modulo de Young de la Matriz</td>
+                <td>E<sub>m</sub></td>
+                <td><input type="number" step="0.001" min="0" id="E_m" value="3.4"></td>
+                <td>GPa</td>
+            </tr>
+            <tr>
+                <td>Relación de Poisson de la Matriz</td>
+                <td>ν<sub>m</sub></td>
+                <td><input type="number" step="0.001" max="1" min="0" id="NU_m" value="0.31"></td>
+                <td>---</td>
+            </tr>
+        </tbody>
+  </table>
+  <br>
+  <h2>Porcentaje de Fibra y de resina del compuesto</h2>
+  <ul>
+    <li>Porcentaje de Fibra: <input type="number" step="0.001" max="1" min="0" id="V_f" value="0.6"></li>
+    <li>Porcentaje de Resina: <input type="number" step="0.001" max="1" min="0" id="V_m" value="0.4"></li>
+  </ul>
+  <br>
+  <h2>Regla de las mezclas</h2>
+  <h3>Resumen de las constantes ingenieriles calculadas según la <b>Regla de las Mezclas</b></h3>
+      <table>
+        <thead>
+            <tr>
+                <th>Propiedad</th>
+                <th>Valor</th>
+                <th>Unidades</th>
+                <th>Expresión algebraica</th>
+                <th>Código JS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Módulo Longitudinal RM: E<sub>1</sub> </td>
+                <td id="E1_RM"></td>
+                <td>MPa</td>
+                <td style="font-size: 0.9rem;"> <!--math E1-->\(E_1=E_fV_f+{E_m}{V}_m\)</td>
+                <td> <pre style="padding: 0; margin: 0;"> <code id="code_E1_RM" class="language-javascript"></code> </pre> </td>
+            </tr>
+            <tr>
+                <td>Módulo Transversal RM: E<sub>2</sub> = E<sub>3</sub></td>
+                <td id="E2_RM"></td>
+                <td>MPa</td>
+                <td style="font-size: 0.9rem;"> <!--math E2--> \(E_{2}=\left[{\frac{V_{m}}{E_{m}}}+{\frac{V_{f}}{E_{f}}}\right]^{-1}\)</td>
+                <td> <pre style="padding: 0; margin: 0;"> <code id="code_E2_RM" class="language-javascript"></code> </pre> </td>
+            </tr>
+            <tr>
+                <td>Módulo de corte en el Plano RM: G<sub>12</sub> = G<sub>13</sub></td>
+                <td id="G12_RM"></td>
+                <td>MPa</td>
+                <td style="font-size: 0.9rem;"><!--math G12-->\(G_{12}=\left[\frac{{V}_{m}}{G_{m}}+\frac{V_{f}}{G_{f}}\right]^{-1}\)</td>
+                <td> <pre style="padding: 0; margin: 0;"> <code id="code_G12_RM" class="language-javascript"></code> </pre> </td>
+            </tr>
+            <tr>
+                <td>Módulo de corte fuera del plano RM: G<sub>23</sub></td>
+                <td id="G23_RM"></td>
+                <td>MPa</td>
+                <td  style="font-size: 0.9rem;"><!--math G23-->\(G_{23}=G_m\frac{V_{f}+\eta_{4}V_{m}}{\eta_{4}V_{m}+V_{f}\,\frac{G_{m}}{G_{f}}}\)</td>
+                <td> <pre style="padding: 0; margin: 0;"> <code id="code_G23_RM" class="language-javascript"></code> </pre> </td>
+            </tr>
+            <tr>
+                <td>Relación de Poisson en el plano RM: ν<sub>12</sub> = ν<sub>13</sub></td>
+                <td id="NU12_RM"></td>
+                <td>---</td>
+                <td  style="font-size: 0.9rem;"> <!--math NU12-->\(v_{12}=v_fV_f+{v_m}{V}_m\)</td>
+                <td> <pre style="padding: 0; margin: 0;"> <code id="code_NU12_RM" class="language-javascript"></code> </pre> </td>
+            </tr>
+            <tr>
+                <td>Relación de Poisson fuera del plano RM: ν<sub>23</sub></td>
+                <td id="NU23_RM"></td>
+                <td>---</td>
+                <td style="font-size: 0.9rem;"> <!--math NU23-->\(\nu_{23}=\frac{E_{2}}{2G_{23}}-1\)</td>
+                <td> <pre style="padding: 0; margin: 0;"> <code id="code_NU23_RM" class="language-javascript"></code> </pre> </td>
+            </tr>
+        </tbody>
+    </table>
+    <pre>
+      <code id="code_RM" class="language-javascript">
+      
+    </code>
+    </pre>
+    <br><br>
+    <h2>Modelo de la Microestructura Periódica</h2>
+    <p>Este es un modelo desarrollado por los investigadores Barbero y Luciano. A diferencia de los anteriores modelos, predice por si solo todos los módulos correspondientes a todos los coeficientes de la matriz de rigidez C<sub>ij</sub>. Para obtener los módulos E<sub>1</sub>, E<sub>2</sub>, ν<sub>12</sub>, G<sub>12</sub>, G<sub>23</sub> y ν<sub>23</sub> en necesario invertir la matriz de rigidez C<sub>ij</sub>, para así obtener los coeficientes de la matriz de flexibilidad S<sub>ij</sub>. Finalmente, haciendo unas operaciones sencillas, se obtienen las constantes ingenieriles mecánicas. Los fundamentos y suposiciones hechas en el modelo se pueden encontrar en el trabajo de Barbero y Luciano (Barbero, E. J. y Luciano, 1995). Las fórmulas involucradas en los cálculos son considerablemente más complicadas que en los anteriores modelos, y se presentan a continuación.
+    </p>
+    <p>En primer lugar, se calculan las constantes de Lamé de la matriz.La definición formal de las constantes de Lamé se pueden ver en las referencias de Lurie  y Ana María Monti (A. I. Lurie, 2005; Ana María Monti, 1997):</p>
+    <img src="assets/images/lame_MU.png" alt=""><br>
+    <img src="assets/images/lame_delta.png" alt="">
+    <p>Luego el parámetro Δ(delta):</p>
+    <img src="assets/images/delta.png" alt="">
+    <p>Seguidamente un conjunto de contantes C’ relacionados con los coeficientes de la matriz rigidez:</p>
+    <img src="assets/images/1C11.png" alt=""><br>
+    <img src="assets/images/1C12C13.png" alt=""><br>
+    <img src="assets/images/1C22C33.png" alt=""><br>
+    <img src="assets/images/1C23.png" alt=""><br>
+    <img src="assets/images/1C44.png" alt=""><br>
+    <img src="assets/images/1C55C66.png" alt="">
+    <p>Hasta ahora, ninguno de los valores calculados, estaba relacionado con el volumen de fibra del compuesto. Los coeficientes s<sub>3</sub>, s<sub>6</sub> y s<sub>7</sub> son los que varían según la fracción del volumen de fibra:</p>
+    <img src="assets/images/s3.png" alt=""><br>
+    <img src="assets/images/s6.png" alt=""><br>
+    <img src="assets/images/s7.png" alt="">
+    <p>Para la siguiente parte del calculo, se trabaja con los valores obtenidos de las Ecuaciones A.2.17 a A.2.25. Los coeficientes a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub> y a<sub>4</sub> se calculan como:</p>
+    <img src="assets/images/a1.png" alt=""><br>
+    <img src="assets/images/a2.png" alt=""><br>
+    <img src="assets/images/a3.png" alt=""><br>
+    <img src="assets/images/a4.png" alt="">
+    <p>Acto seguido, se llega a unos coeficientes C*:</p>
+    <img src="assets/images/asteriscoC11.PNG" alt=""><br>
+    <img src="assets/images/asteriscoC12.png" alt=""><br>
+    <img src="assets/images/asteriscoC22.png" alt=""><br>
+    <img src="assets/images/asteriscoC23.png" alt=""><br>
+    <img src="assets/images/asteriscoC44.png" alt=""><br>
+    <img src="assets/images/asteriscoC66.png" alt="">
+    <p>Y finalmente, relaciona los coeficientes C* con las constantes de la matriz rigidez C<sub>ij</sub>:</p>
+    <img src="assets/images/c11.PNG" alt=""><br>
+    <img src="assets/images/c12c13.png" alt=""><br>
+    <img src="assets/images/c22c33.png" alt=""><br>
+    <img src="assets/images/c23.png" alt=""><br>
+    <img src="assets/images/c44.png" alt=""><br>
+    <img src="assets/images/c55c66.png" alt="">
+    <p>Invirtiendo la matriz rigidez C<sub>ij</sub> se obtiene la matriz flexibilidad S<sub>ij</sub> y finalmente se obtienen las constantes ingenieriles:</p>
+    <img src="assets/images/E1_MMP.png" alt=""><br>
+    <img src="assets/images/E2_MMP.png" alt=""><br>
+    <img src="assets/images/G12_MMP.png" alt=""><br>
+    <img src="assets/images/G23_MMP.png" alt=""><br>
+    <img src="assets/images/NU12_MMP.png" alt=""><br>
+    <img src="assets/images/NU23_MMP.png" alt="">
+    <h3>Resumen de las constantes ingenieriles calculadas según el <b>Modelo de la Microestructura Periódica</b></h3>
+
+    <!-- -->
+    <script type="module" src="js/index.js"></script>
+    
+    <script id="script_RM">
+      const d = document;
+      // Datos de entrada
+      //Pasefloar convierte los datos ingresados tipo "string" en tipo "number"
+      const E_f_a = parseFloat(d.getElementById('E_f_a').value);
+      const E_f_t = parseFloat(d.getElementById('E_f_t').value);
+      const NU_f_a = parseFloat(d.getElementById('NU_f_a').value);
+      const NU_f_t = parseFloat(d.getElementById('NU_f_t').value);
+      const G_f_a = parseFloat(d.getElementById('G_f_a').value);
+      const G_f_t = parseFloat(d.getElementById('G_f_t').value);
+      const E_m = parseFloat(d.getElementById('E_m').value);
+      const NU_m = parseFloat(d.getElementById('NU_m').value);
+      const V_m = parseFloat(d.getElementById('V_m').value);
+      const V_f = parseFloat(d.getElementById('V_f').value);
+      //Datos de salida
+      const HTML_E1_RM = d.getElementById("E1_RM");
+      const HTML_E2_RM = d.getElementById("E2_RM");
+      const HTML_G12_RM = d.getElementById("G12_RM");
+      const HTML_G23_RM = d.getElementById("G23_RM");
+      const HTML_NU12_RM = d.getElementById("NU12_RM");
+      const HTML_NU23_RM = d.getElementById("NU23_RM");
+      //Evaluación de las expresionesnuméricas
+      const G_m = E_m / (2 * (1 + NU_m));
+      const ETA4_RM = (3 - 4 * NU_m + (G_m / G_f_a)) / (4 * (1 - NU_m));
+      const E1_RM = E_f_a * V_f + E_m * V_m; 
+      const E2_RM = (V_m / E_m + V_f / E_f_a) ** (-1); 
+      const G12_RM = (V_m / G_m + V_f / G_f_a) ** (-1); 
+      const G23_RM = G_m * (V_f + ETA4_RM * V_m) / (ETA4_RM * V_m + V_f * G_m / G_f_a);
+      const NU12_RM = NU_f_a * V_f + NU_m * V_m;
+      const NU23_RM = E2_RM / (2 * G23_RM) -1;
+      //Escritura de los numeros evaluados en las expresiones dentro del HTML
+      HTML_E1_RM.textContent = E1_RM.toLocaleString('es-AR', { maximumFractionDigits: 3 }); 
+      HTML_E2_RM.textContent = E2_RM.toLocaleString('es-AR', { maximumFractionDigits: 3 }); 
+      HTML_G12_RM.textContent = G12_RM.toLocaleString('es-AR', { maximumFractionDigits: 3 }); 
+      HTML_G23_RM.textContent = G23_RM.toLocaleString('es-AR', { maximumFractionDigits: 3 });
+      HTML_NU12_RM.textContent = NU12_RM.toLocaleString('es-AR', { maximumFractionDigits: 3 });
+      HTML_NU23_RM.textContent = NU23_RM.toLocaleString('es-AR', { maximumFractionDigits: 3 });
+
+    </script>
+    <script id="script_E1_RM">
+      E1_RM = E_f_a * V_f + E_m * V_m; 
+    </script>
+    <script id="script_E2_RM">
+      E2_RM = (V_m / E_m + V_f / E_f_a) ** (-1); 
+    </script>
+    <script id="script_G12_RM">
+      G12_RM = (V_m / G_m + V_f / G_f_a) ** (-1); 
+    </script>
+    <script id="script_G23_RM">
+      G23_RM = G_m * (V_f + ETA4_RM * V_m) / (ETA4_RM * V_m + V_f * G_m / G_f_a);
+    </script>
+    <script id="script_NU12_RM">
+      NU12_RM = NU_f_a * V_f + NU_m * V_m;
+    </script>
+    <script id="script_NU23_RM">
+      NU23_RM = E2_RM / (2 * G23_RM) -1;
+    </script>
+    <script>
+      //Función para escribir el texto contenido en un script adentro de un bloque HTML <code>
+      function script_to_codeTag (code,script){
+        // Obtener el contenido del script
+        const scriptContent = document.getElementById(script).textContent;
+        // Insertar el contenido en la etiqueta code
+        const codeElement = document.getElementById(code);
+        codeElement.innerHTML = scriptContent;
+      }
+      script_to_codeTag("code_RM", "script_RM");
+      script_to_codeTag("code_E1_RM", "script_E1_RM");
+      script_to_codeTag("code_E2_RM", "script_E2_RM");
+      script_to_codeTag("code_G12_RM", "script_G12_RM");
+      script_to_codeTag("code_G23_RM", "script_G23_RM");
+      script_to_codeTag("code_NU12_RM", "script_NU12_RM");
+      script_to_codeTag("code_NU23_RM", "script_NU23_RM");
+    </script>
+
+    <script>
+      //Consultar simbolos matematicos para mathML:
+      //https://www.matematicasypoesia.com.es/botones/simbolos_matematicos.htm
+      //
+      //Letras griegas en HTML:
+      //https://www.yubrain.com/ciencias-de-la-computacion/escribir-letras-griegas-en-la-computadora/#:~:text=Para%20a%C3%B1adir%20caracteres%20especiales%20tales%20como%20las%20letras,c%C3%B3digo%20HTML%20de%20la%20letra%20alfa%20es%20alpha.
+      //
+      //Ejemplos en HTML:
+      //https://programacion.net/articulo/introduccion_a_mathml-_el_lenguaje_de_diseno_para_matematicas_1568
+
+      //https://math-editor.online/ Latex o Mathml a partir de imagenes
+
+      //MathJax: para escribir formulas matmaticas en HTML con codigo latex
+      //https://www.mathjax.org/#gettingstarted
+    </script>
+</body>
+</html>
