@@ -3,6 +3,8 @@ import './prism.js';
 import './prism-python.min.js';
 import './prism-javascript.min.js';
 import './prism-line-highlight.js';
+//import './prism2.js';
+import './prism3.js';
 //import '../css/prism-vsc-dark-plus.css'
 // Importa más lenguajes si es necesario
 
